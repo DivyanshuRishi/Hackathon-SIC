@@ -1,8 +1,14 @@
-// src/components/AdminPanel/Sidebar.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ role }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('userRole'); // Remove the role from localStorage
+    navigate('/'); // Redirect to homepage or login page
+  };
+
   return (
     <div style={styles.sidebar}>
       <ul>
@@ -17,11 +23,11 @@ const Sidebar = ({ role }) => {
         ) : (
           <>
             <li><Link to="/user/dashboard">Dashboard</Link></li>
-            <li><Link to="/user/ask-questions">Ask Questions</Link></li>
+            {/* <li><Link to="/user/ask-questions">Ask Questions</Link></li> */}
             <li><Link to="/user/chatbot">Chatbot</Link></li>
           </>
         )}
-        <li><Link to="/logout">Logout</Link></li>
+        <li><a onClick={handleLogout}>Logout</a></li>
       </ul>
     </div>
   );

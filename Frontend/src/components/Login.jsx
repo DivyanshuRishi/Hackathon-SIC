@@ -1,14 +1,44 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ setRole }) { // Accept setRole as a prop
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user'); // Default role
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  useEffect(() => {
+    // Reset error on component mount
+    setError('');
+  }, []);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(`Logging in as ${role}:`, { email, password });
-    // Add your login logic here
+
+    try {
+      const response = await axios.post('http://localhost:7001/api/auth/login', { email, password });
+      
+      // Store the token and role in local storage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userRole', response.data.role);
+      setRole(response.data.role); // Update role in the state
+      console.log('Logged in successfully');
+
+      // Redirect based on role
+      if (response.data.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user/dashboard');
+      }
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.msg) {
+        setError(err.response.data.msg);
+      } else {
+        setError('Invalid login credentials or server error');
+      }
+      console.error(err);
+    }
   };
 
   return (
@@ -35,17 +65,7 @@ function Login() {
             className="w-full px-3 py-2 border rounded"
           />
         </div>
-        <div className="mb-4">
-          <label className="block mb-2">Role</label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
+        {error && <p className="text-red-500">{error}</p>}
         <button type="submit" className="w-full py-2 bg-blue-500 text-white rounded">
           Login
         </button>

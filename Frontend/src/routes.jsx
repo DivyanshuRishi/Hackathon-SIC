@@ -1,15 +1,13 @@
-// src/routes.js
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import Dashboard from './pages/admin/Dashboard';
-import AddQuestions from './pages/admin/AddQuestions';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import AddNotices from './pages/admin/AddNotices';
-import InvalidQuestions from './pages/admin/InvalidQuestions';
+import AddQuestions from './pages/admin/AddQuestions';
 import ChangePassword from './pages/admin/ChangePassword';
-import UserDashboard from './pages/user/UserDashboard';
-import AskQuestions from './pages/user/AskQuestions';
+import Dashboard from './pages/admin/Dashboard';
+import InvalidQuestions from './pages/admin/InvalidQuestions';
 import Chatbot from './pages/user/ChatBot';
-import Logout from './pages/admin/Logout';
+import Logout from './pages/user/Logout'; // Import Logout
+import UserDashboard from './pages/user/UserDashboard';
 import AdminRoutes from './routes/AdminRoutes';
 import UserRoutes from './routes/userRoutes';
 
@@ -17,7 +15,7 @@ const AppRoutes = ({ role }) => {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/logout" element={<Logout />} />
+      <Route path="/logout" element={<Logout />} /> {/* Logout Route */}
 
       {/* Admin Protected Routes */}
       <Route element={<AdminRoutes role={role} />}>
@@ -31,7 +29,6 @@ const AppRoutes = ({ role }) => {
       {/* User Protected Routes */}
       <Route element={<UserRoutes role={role} />}>
         <Route path="/user/dashboard" element={<UserDashboard />} />
-        <Route path="/user/ask-questions" element={<AskQuestions />} />
         <Route path="/user/chatbot" element={<Chatbot />} />
       </Route>
 
